@@ -1,0 +1,44 @@
+name: Ansible
+
+on:
+  pull_request:
+    paths:
+      - "**.yml"
+      - "**.yaml"
+      - ".github/workflows/ansible.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "**.yml"
+      - "**.yaml"
+      - ".github/workflows/ansible.yml"
+
+jobs:
+  validate:
+    name: Validate Ansible content
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Ansible tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible yamllint
+
+      - name: Run yamllint
+        run: yamllint -d relaxed .
+
+      - name: Run Ansible syntax check
+        run: >
+          ansible-playbook deploy-cloudstack.yml
+          -i hosts
+          --syntax-check
+          -e "mysql_root_password=example mysql_cloud_password=example cloudstack_release=4.19 cloudstack_systemvmtemplate=4.19.1 install_local_db=true"

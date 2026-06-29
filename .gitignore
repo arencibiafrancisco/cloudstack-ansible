@@ -1,0 +1,19 @@
+# Ansible runtime files
+*.retry
+.ansible/
+
+# Local inventory and secret files
+*.vault
+*.secret
+*.secrets
+group_vars/*/vault.yml
+host_vars/*/vault.yml
+
+# Python/cache files
+__pycache__/
+*.py[cod]
+
+# Local/editor files
+.DS_Store
+.idea/
+.vscode/
